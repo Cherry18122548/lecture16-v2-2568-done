@@ -4,6 +4,8 @@ import express, {
   type Response,
 } from "express";
 
+import morgan from "morgan";
+
 // import database
 import { students } from "./db/db.js";
 import {
@@ -15,6 +17,10 @@ import type { Student } from "./libs/types.js";
 
 const app = express();
 const port = 3000;
+
+//morgan middlewares
+app.use(morgan("combined"));
+
 
 // middlewares
 app.use(express.json());
@@ -34,18 +40,18 @@ app.get("/students", (req: Request, res: Response) => {
       let filtered_students = students.filter(
         (student) => student.program === program
       );
-      return res.json({
+      return res.status(200).json({
         success: true,
         data: filtered_students,
       });
     } else {
-      return res.json({
+      return res.status(200).json({
         success: true,
         data: students,
       });
     }
   } catch (err) {
-    return res.json({
+    return res.status(409).json({
       success: false,
       message: "Something is wrong, please try again",
       error: err,
